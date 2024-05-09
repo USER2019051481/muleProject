@@ -1,17 +1,13 @@
-package com.example.mule;
+package cn.attackme.muleproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HelloWorldApplication {
+public class MuleProjectApplication {
 
     public static void main(String[] args) {
-
-
-        SpringApplication.run(HelloWorldApplication.class, args);
-
-        System.out.println("hello world!");
+        SpringApplication.run(MuleProjectApplication.class, args);
     }
 
 }
