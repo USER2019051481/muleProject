@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: 20010127lyl
-    url: jdbc:mysql://localhost:3306/myuploader?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/muleproject?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -10,7 +10,7 @@ spring:
       ddl-auto: update
 
 server:
-  port: 8081
+  port: 9090
 
 config:
   jwt:
