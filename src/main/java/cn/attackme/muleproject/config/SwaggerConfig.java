@@ -21,14 +21,14 @@ public class SwaggerConfig {
                 .groupName("ClientApi")
                 .select()
                 //扫描的包名称
-                .apis(RequestHandlerSelectors.basePackage("cn.attackme.myuploader.controller"))
+                .apis(RequestHandlerSelectors.basePackage("cn.attackme.muleprojectr.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("加载项文件管理-api接口文档")
+                .title("mule-api接口文档")
                 .description("powered by l&y")
                 .version("1.0")
                 .build();
