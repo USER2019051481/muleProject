@@ -43,7 +43,7 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
         // 从输入流读取JSON数据并将其解析为Graph对象
         JsonGraphDTO graph = mapper.readValue(json, JsonGraphDTO.class);
         List<JsonNodeDTO> nodes = graph.getNodes();
-        List<JsonEdgeDTO> edges = graph.getEdges();
+//        List<JsonEdgeDTO> edges = graph.getEdges();
         List<JsonGlobalDTO> globalConfigs = graph.getGlobalConfig();
         StringBuilder sb = new StringBuilder() ;
         Set<String> writtenNodes = new HashSet<>(); // 用于存储已写入的节点的ID
@@ -67,34 +67,57 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
             loadGlobalProperties(globalConfigs,sb);
         }
 
+        // 逐个解析flow
+        for(JsonNodeDTO node: nodes){
+            // 找到flow节点
+            boolean isFlow = findFlow(node);
 
-
-        // 写flow
-        sb.append("\t<flow name=\"\" doc:id=\"\">\n") ;
-        // 逐个解析edge
-        for (JsonEdgeDTO edge : edges) {
-            String source = edge.getSource();
-            String target = edge.getTarget();
-            // 通过source和target找到node
-            JsonNodeDTO nodeSource = findNodeById(source, nodes);
-            JsonNodeDTO nodeTarget = findNodeById(target, nodes);
-            if (nodeSource == null || nodeTarget == null) {
-                log.info("找不到id为" + source + " 的节点或者id为：" + target + " 的节点！！！");
-                continue; // 如果找不到节点，跳过当前边
+            if(!isFlow){
+//                log.info("该节点不是flow");
+                continue ;
             }
-
-
-            writeNodeXml(writtenNodes, source, nodeSource, sb,nodes,2);
-            writeNodeXml(writtenNodes, target, nodeTarget, sb,nodes,2);
-
+            // 该节点是flow节点
+            xmlTemplateService.loadFlowStart(node,sb);
+            // 处理flow里面的节点
+            for (String childNodeId : node.getChildNodes()) {
+//                log.info("flow里面的节点"+childNodeId);
+                JsonNodeDTO childNode = findNodeById(childNodeId, nodes);
+//                log.info("找到的子节点为"+childNode.getType());
+                writeNodeXml(writtenNodes, childNodeId, childNode, sb,nodes,2);
+            }
+            xmlTemplateService.loadFlowEnd(sb);
         }
-        sb.append("\t</flow>\n") ;
 
-        // 判断有没有子flow
 
+
+
+
+
+//        // 写flow
+//        sb.append("\t<flow name=\"\" doc:id=\"\">\n") ;
+//        // 逐个解析edge
+//        for (JsonEdgeDTO edge : edges) {
+//            String source = edge.getSource();
+//            String target = edge.getTarget();
+//            // 通过source和target找到node
+//            JsonNodeDTO nodeSource = findNodeById(source, nodes);
+//            JsonNodeDTO nodeTarget = findNodeById(target, nodes);
+//            if (nodeSource == null || nodeTarget == null) {
+//                log.info("找不到id为" + source + " 的节点或者id为：" + target + " 的节点！！！");
+//                continue; // 如果找不到节点，跳过当前边
+//            }
+//
+//
+//            writeNodeXml(writtenNodes, source, nodeSource, sb,nodes,2);
+//            writeNodeXml(writtenNodes, target, nodeTarget, sb,nodes,2);
+//
+//        }
+//        sb.append("\t</flow>\n") ;
+//
+        // 判断有没有Subflow
         for (JsonNodeDTO node : nodes) {
             String nodeType = node.getType();
-            if ("subFlow".equals(nodeType)) {
+            if ("SubFlow".equals(nodeType)) {
                 xmlTemplateService.loadSubFlowStart(node,sb,1);
                 // 找到未写入的节点，将其写入 XML
                 writeNodeXml(writtenNodes, node.getId(), node, sb, nodes,1);
@@ -103,9 +126,17 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
         }
 
         sb.append("</mule>") ;
-        System.out.print("xml为：\n"+sb.toString());
+//        System.out.print("xml为：\n"+sb.toString());
         return sb.toString() ;
 
+    }
+
+    private boolean findFlow(JsonNodeDTO node){
+        // 判断node是不是flow
+        if("Flow".equals(node.getType())){
+            return true ;
+        }
+        return false ;
     }
 
     private void loadGlobalProperties(List<JsonGlobalDTO> globalConfigs,StringBuilder sb ) {
@@ -136,6 +167,7 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
 
     private void writeNodeXml(Set<String> writtenNodes, String id, JsonNodeDTO node, StringBuilder sb,List<JsonNodeDTO> nodes,int depth) {
         if(!writtenNodes.contains(id)){
+            log.info("id"+id);
             String nodeSourceString = loadNode(node,nodes,new StringBuilder(),depth,writtenNodes);
             sb.append(nodeSourceString) ;
             writtenNodes.add(id) ;
@@ -167,21 +199,21 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
             }
         } else {
             // 有data
-            if("listener".equals(type)){
+            if("Listener".equals(type)){
                 xmlTemplateService.loadListenerStart(node,result,depth);
-            }else if("choice".equals(type)){
+            }else if("Choice".equals(type)){
                 xmlTemplateService.loadChoiceStart(node,result,depth);
-            }else if("flowReference".equals(type)){
+            }else if("FlowReference".equals(type)){
                 xmlTemplateService.loadFlowReferenceStart(node,result, depth);
-            }else if("choiceDefault".equals(type)){
+            }else if("ChoiceDefault".equals(type)){
                 xmlTemplateService.loadChoiceDefaultStart(node,result, depth);
-            }else if("choiceWhen".equals(type)){
+            }else if("ChoiceWhen".equals(type)){
                 xmlTemplateService.loadChoiceWhenStart(node,result, depth);
-            }else if("database".equals(type)){
+            }else if("Database".equals(type)){
                 xmlTemplateService.loadDatabaseStart(node,result, depth);
-            }else if("forEach".equals(type)){
+            }else if("ForEach".equals(type)){
                 xmlTemplateService.loadForEachStart(node,result, depth);
-            }else if("logger".equals(type)){
+            }else if("Logger".equals(type)){
                 xmlTemplateService.loadLoggerStart(node,result, depth);
             }
 //            for (Map.Entry<String, Object> entry : data.entrySet()) {
@@ -227,15 +259,15 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
         }
 
             // 根据type进行尾部处理
-            if("choice".equals(type)){
+            if("Choice".equals(type)){
                 xmlTemplateService.loadChoiceEnd(node,result,depth);
-            }else if("choiceDefault".equals(type)){
+            }else if("ChoiceDefault".equals(type)){
                 xmlTemplateService.loadChoiceDefaultEnd(node,result, depth);
-            }else if("choiceWhen".equals(type)){
+            }else if("ChoiceWhen".equals(type)){
                 xmlTemplateService.loadChoiceWhenEnd(node,result, depth);
-            }else if("database".equals(type)){
+            }else if("Database".equals(type)){
                 xmlTemplateService.loadDatabaseEnd(node,result, depth);
-            }else if("forEach".equals(type)){
+            }else if("ForEach".equals(type)){
                 xmlTemplateService.loadForEachEnd(node,result, depth);
             }
 //            if(depth == 0){

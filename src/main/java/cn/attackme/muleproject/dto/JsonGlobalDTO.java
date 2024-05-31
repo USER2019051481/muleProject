@@ -19,6 +19,7 @@ public class JsonGlobalDTO {
     private String username;
     private String password;
     private String database;
+    private String driver ;
 
 
 

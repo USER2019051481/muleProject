@@ -110,6 +110,13 @@ public class XmlTemplateServiceImpl implements XmlTemplateService {
 
     }
 
+    @Override
+    public  void loadFlowStart(JsonNodeDTO node,StringBuilder sb){
+        Map<String,Object> data = node.getData() ;
+        sb.append("\t<flow name=\""+data.get("displayName")+"\" doc:id=\""+node.getId()+"\">\n") ;
+
+    }
+
 
     //==========================尾部处理==============================
 
@@ -159,5 +166,10 @@ public class XmlTemplateServiceImpl implements XmlTemplateService {
     public void loadSubFlowEnd(JsonNodeDTO node, StringBuilder sb, int depth) {
         creatTab(sb,depth);
         sb.append("</sub-flow>\n") ;
+    }
+
+    @Override
+    public  void loadFlowEnd(StringBuilder sb){
+        sb.append("\t</flow>\n") ;
     }
 }

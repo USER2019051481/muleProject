@@ -2,6 +2,7 @@ package cn.attackme.muleproject.service;
 
 import cn.attackme.muleproject.dto.JsonGlobalDTO;
 import cn.attackme.muleproject.dto.JsonNodeDTO;
+import springfox.documentation.spring.web.json.Json;
 
 public interface XmlTemplateService {
     /**
@@ -26,6 +27,8 @@ public interface XmlTemplateService {
     void loadDatabaseStart(JsonNodeDTO jsonNodeDTO,StringBuilder sb,int depth) ;
     void loadChoiceWhenStart(JsonNodeDTO jsonNodeDTO,StringBuilder sb,int depth) ;
     void loadChoiceDefaultStart(JsonNodeDTO jsonNodeDTO,StringBuilder sb,int depth) ;
+
+    void loadFlowStart(JsonNodeDTO node,StringBuilder sb) ;
 //==========================================================================================
 
     void loadForEachStart(JsonNodeDTO node, StringBuilder result, int depth);
@@ -43,4 +46,6 @@ public interface XmlTemplateService {
     void loadForEachEnd(JsonNodeDTO node, StringBuilder result, int depth);
 
     void loadSubFlowEnd(JsonNodeDTO node, StringBuilder sb, int i);
+
+    void loadFlowEnd(StringBuilder sb) ;
 }
