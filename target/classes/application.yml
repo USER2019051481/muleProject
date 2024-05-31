@@ -1,8 +1,8 @@
 spring:
   datasource:
-    username: lianmeda
-    password: Med@01703
-    url: jdbc:mysql://119.23.170.45:3306/obis_srsrmyy_dev?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
+    username: root
+    password: 20010127lyl
+    url: jdbc:mysql://localhost:3306/muleproject?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
