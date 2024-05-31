@@ -20,9 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("不存在该用户: " + username);
+            throw new UsernameNotFoundException("该用户不存在");
         }
-        // 使用 Collections.emptyList() 创建空的 List
+
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.emptyList());
     }
 }
