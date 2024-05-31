@@ -6,15 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="565380a7-8bbf-4feb-8b97-a7e6052bcc83" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/config/JwtRequestFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/config/JwtRequestFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/CanvasController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/CanvasController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/CustomUserDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/CanvasService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/CanvasService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/JwtRequestFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/JwtRequestFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/controller/CanvasController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/controller/CanvasController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/CustomUserDetailsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/CustomUserDetailsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/CanvasService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/CanvasService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +180,11 @@
       <workItem from="1715761005527" duration="123000" />
       <workItem from="1716780571315" duration="10459000" />
       <workItem from="1716791250747" duration="14518000" />
-      <workItem from="1717082557124" duration="52000" />
+      <workItem from="1717082557124" duration="189000" />
+      <workItem from="1717085047513" duration="9188000" />
+      <workItem from="1717136610555" duration="3446000" />
+      <workItem from="1717141263270" duration="1760000" />
+      <workItem from="1717159409637" duration="4812000" />
     </task>
     <servers />
   </component>
