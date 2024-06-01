@@ -19,7 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username",nullable = false, unique = true)
+    @Column(name = "username",nullable = false, unique = true,columnDefinition = "VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci")
     private String username;
 
     @Column(name = "password",nullable = false)
