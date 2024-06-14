@@ -49,7 +49,6 @@ public class UserController {
             if (userService.findByUsername(username)!= null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("用户名已存在");
             }
-            // 尝试注册用户
             UserDTO userDTO = userService.convertToDTO(username, password);
             userService.save(userDTO);
 

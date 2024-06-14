@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,27 +32,34 @@ public class CanvasController {
             String canvas = jsonNode.get("canvas").toString();
             String name = jsonNode.get("name").textValue();
             CanvasDTO canvasDTO = canvasService.convertToDTO(canvas, name, username);
-            canvasService.saveCanvas(canvasDTO);
-            return ResponseEntity.ok("画布保存成功");
+            Map<String, Object> canvasMap = canvasService.saveCanvas(canvasDTO, username);
+            return ResponseEntity.ok(canvasMap);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (NullPointerException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("缺少参数："+e.getMessage());
         } catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户未认证");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("画布保存失败"+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("画布保存失败："+e.getMessage());
         }
     }
 
     @GetMapping("get")
-    public ResponseEntity<?> getHistoricalCanvases() {
+    public ResponseEntity<?> getHistoricalCanvases(@RequestParam(value = "id", required = false) String id) {
         try {
             String username = jwtTokenUtil.getAuthenticatedUsername();
-            List<Map<String, Object>> canvas = canvasService.getCanvases(username);
-            return ResponseEntity.ok(canvas);
+            if (id != null) {
+                Map<String, Object> canvas = canvasService.getCanvasesByID(Long.valueOf(id));
+                return ResponseEntity.ok(canvas);
+            } else {
+                List<Map<String, Object>> canvases = canvasService.getCanvases(username);
+                return ResponseEntity.ok(canvases);
+            }
         }  catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户未认证");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("获取画布失败"+e.getMessage());
+            return ResponseEntity.badRequest().body("获取画布失败："+e.getMessage());
         }
     }
 
@@ -62,12 +70,15 @@ public class CanvasController {
             JsonNode jsonNode = mapper.readTree(canvasData);
             Long id = Long.valueOf(jsonNode.get("id").textValue());
             String name = jsonNode.get("name").textValue();
-            canvasService.updateCanvasName(id, name);
+            String canvas = jsonNode.get("canvas").toString();
+            canvasService.updateCanvasName(id, name, canvas);
             return ResponseEntity.ok("画布名更新成功");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (NullPointerException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("缺少参数："+e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("画布名更新失败"+e.getMessage());
+            return ResponseEntity.badRequest().body("画布名更新失败："+e.getMessage());
         }
     }
 
@@ -82,7 +93,7 @@ public class CanvasController {
         } catch (NullPointerException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("缺少参数："+e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("画布删除失败"+e.getMessage());
+            return ResponseEntity.badRequest().body("画布删除失败："+e.getMessage());
         }
     }
 }
