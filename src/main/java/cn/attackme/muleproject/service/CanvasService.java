@@ -68,15 +68,25 @@ public class CanvasService {
         return canvasMap;
     }
 
-    public void updateCanvasName(Long id, String newName, String canvas) {
+    public void updateCanvasName(Long id, String newName) {
         String username = jwtTokenUtil.getAuthenticatedUsername();
         Long userId = userRepository.findByUsername(username).getId();
         String oldName = canvasRepository.findCanvasNameById(id);
+        if (!canvasRepository.existsById(id)) {
+            throw new IllegalArgumentException("画布不存在");
+        }
         if (!newName.equals(oldName) && canvasRepository.existsByCanvasNameAndUserId(newName, userId)) {
             throw new IllegalArgumentException("画布名已存在");
         } else {
-            canvasRepository.updateById(id, canvas, newName);
+            canvasRepository.updateNameById(id, newName);
         }
+    }
+
+    public void updateCanvas(Long id, String newCanvas) {
+        if (!canvasRepository.existsById(id)) {
+            throw new IllegalArgumentException("画布不存在");
+        }
+        canvasRepository.updateCanvasJsonById(id, newCanvas);
     }
 
     public void deleteCanvas(Long id){

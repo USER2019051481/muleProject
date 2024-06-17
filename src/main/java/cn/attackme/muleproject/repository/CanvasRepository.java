@@ -16,8 +16,13 @@ public interface CanvasRepository extends JpaRepository<CanvasEntity, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE CanvasEntity c SET c.canvasJson = :canvas, c.canvasName = :canvasName WHERE c.id = :id")
-    void updateById(Long id, String canvas, String canvasName);
+    @Query("UPDATE CanvasEntity c SET c.canvasName = :canvasName WHERE c.id = :id")
+    void updateNameById(Long id, String canvasName);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE CanvasEntity c SET c.canvasJson = :canvas WHERE c.id = :id")
+    void updateCanvasJsonById(Long id, String canvas);
 
     void deleteById(Long id);
 

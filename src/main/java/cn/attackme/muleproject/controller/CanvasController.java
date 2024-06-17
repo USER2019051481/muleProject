@@ -63,22 +63,48 @@ public class CanvasController {
         }
     }
 
-    @PostMapping("/update")
+    @PostMapping ("/update")
     public ResponseEntity<?> updateCanvasName(@RequestBody String canvasData) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(canvasData);
             Long id = Long.valueOf(jsonNode.get("id").textValue());
-            String name = jsonNode.get("name").textValue();
-            String canvas = jsonNode.get("canvas").toString();
-            canvasService.updateCanvasName(id, name, canvas);
-            return ResponseEntity.ok("画布名更新成功");
+            String updatedName = jsonNode.has("name") ? jsonNode.get("name").textValue() : null;
+            String updatedCanvas = jsonNode.has("canvas") ? jsonNode.get("canvas").toString() : null;
+
+//            // 全部更新
+//            if (jsonNode.has("patch")) {
+//                JsonNode patchNode = jsonNode.get("patch");
+//                for (JsonNode patch : patchNode) {
+//                    String op = patch.get("op").textValue();
+//                    String path = patch.get("path").textValue();
+//                    String value = patch.get("value").textValue();
+//                    // 根据op和path更新对应的字段
+//                    if ("replace".equals(op)) {
+//                        if (path.equals("name")) {
+//                            updatedName = value;
+//                        } else if (path.equals("canvas")) {
+//                            updatedCanvas = value;
+//                        }
+//                    }
+//                }
+//            }
+
+            // 更新 name 和 canvas
+            if (updatedName != null) {
+                canvasService.updateCanvasName(id, updatedName);
+            }
+            if (updatedCanvas != null) {
+                canvasService.updateCanvas(id, updatedCanvas);
+            }
+
+            return ResponseEntity.ok("画布更新成功");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (NullPointerException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("缺少参数："+e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("画布名更新失败："+e.getMessage());
+            return ResponseEntity.badRequest().body("画布更新失败："+e.getMessage());
         }
     }
 
