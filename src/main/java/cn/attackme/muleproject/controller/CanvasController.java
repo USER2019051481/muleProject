@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +40,7 @@ public class CanvasController {
         } catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户未认证");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("画布保存失败："+e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("画布保存失败："+e.getMessage());
         }
     }
 
@@ -90,7 +89,6 @@ public class CanvasController {
 //                }
 //            }
 
-            // 更新 name 和 canvas
             if (updatedName != null) {
                 canvasService.updateCanvasName(id, updatedName);
             }

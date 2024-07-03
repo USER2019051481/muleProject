@@ -32,4 +32,6 @@ public interface CanvasRepository extends JpaRepository<CanvasEntity, Long> {
     boolean existsByCanvasNameAndUserId(String newName, Long userId);
 
     CanvasEntity findByCanvasNameAndUserId(String name, Long userId);
+
+    CanvasEntity findCanvasEntityById(Long id);
 }
