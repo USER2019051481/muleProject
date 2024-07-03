@@ -6,6 +6,7 @@ import cn.attackme.muleproject.dto.JsonGraphDTO;
 import cn.attackme.muleproject.dto.JsonNodeDTO;
 import cn.attackme.muleproject.service.JsonToXmlService;
 import cn.attackme.muleproject.service.XmlTemplateService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -28,7 +29,7 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
     @Resource
     private XmlTemplateService xmlTemplateService ;
     /**
-     * 将文件中的数据按照节点和连接线，解析出来
+     * 将一个业务流的json对象转为xml格式
      * @param json  传入json对象
      * @throws IOException
      */
@@ -90,29 +91,6 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
 
 
 
-
-
-
-//        // 写flow
-//        sb.append("\t<flow name=\"\" doc:id=\"\">\n") ;
-//        // 逐个解析edge
-//        for (JsonEdgeDTO edge : edges) {
-//            String source = edge.getSource();
-//            String target = edge.getTarget();
-//            // 通过source和target找到node
-//            JsonNodeDTO nodeSource = findNodeById(source, nodes);
-//            JsonNodeDTO nodeTarget = findNodeById(target, nodes);
-//            if (nodeSource == null || nodeTarget == null) {
-//                log.info("找不到id为" + source + " 的节点或者id为：" + target + " 的节点！！！");
-//                continue; // 如果找不到节点，跳过当前边
-//            }
-//
-//
-//            writeNodeXml(writtenNodes, source, nodeSource, sb,nodes,2);
-//            writeNodeXml(writtenNodes, target, nodeTarget, sb,nodes,2);
-//
-//        }
-//        sb.append("\t</flow>\n") ;
 //
         // 判断有没有Subflow
         for (JsonNodeDTO node : nodes) {
@@ -130,6 +108,40 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
         return sb.toString() ;
 
     }
+
+    /**
+     * 全局配置的json转xml
+     * @param json
+     * @return
+     * @throws JsonProcessingException
+     */
+    @Override
+    public String loadGlobalConfigJsonFromFile(String json) throws JsonProcessingException {
+        StringBuilder sb = new StringBuilder() ;
+        JsonGlobalDTO globalConfigs = loadJsonToJsonGlobalDTO(json) ;
+        if(globalConfigs==null){
+            //没有全局配置
+            log.info("此json文件没有全局配置！");
+        }else{
+            loadGlobalProperties(Arrays.asList(globalConfigs),sb);
+        }
+        return sb.toString();
+    }
+
+
+
+    @Override
+    public JsonGlobalDTO loadJsonToJsonGlobalDTO(String json) throws JsonProcessingException {
+        // 创建 ObjectMapper
+        // 如果 JSON 数据中的字段值为空字符串 ("")，它们将被解析为 Java 对象的 null。
+        ObjectMapper mapper = JsonMapper.builder()
+                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+                .build();
+        JsonGlobalDTO globalConfigs = mapper.readValue(json, JsonGlobalDTO.class);
+
+        return globalConfigs;
+    }
+
 
     private boolean findFlow(JsonNodeDTO node){
         // 判断node是不是flow
@@ -150,8 +162,19 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
                 }
                 if("Database".equals(type)){
                     // 处理mysqlConfiguration
+                    // TODO 其中driver配置格式未定
                     if("MySQL".equals(globalConfig.getConnection())){
                         xmlTemplateService.loadMysqlConfiguration(globalConfig,sb) ;
+                    }
+                    if("SQL Server".equals(globalConfig.getConnection())){
+                        xmlTemplateService.loadSQLServerConfiguration(globalConfig,sb) ;
+                    }
+                    if("Oracle".equals(globalConfig.getConnection())){
+                        xmlTemplateService.loadOracleConfiguration(globalConfig,sb) ;
+                    }
+                    if("PostgreSQL".equals(globalConfig.getConnection())){
+                        // TODO 还未有对应的xml配置
+                        xmlTemplateService.loadPostgreSQLConfiguration(globalConfig,sb) ;
                     }
                     // TODO 还有其他类型数据库配置未处理
 

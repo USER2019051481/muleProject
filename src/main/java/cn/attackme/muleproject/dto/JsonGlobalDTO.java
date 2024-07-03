@@ -20,6 +20,10 @@ public class JsonGlobalDTO {
     private String password;
     private String database;
     private String driver ;
+    // SQL Server、Oracle
+    private String instanceName ;
+    //Oracle
+    private String serviceName ;
 
 
 

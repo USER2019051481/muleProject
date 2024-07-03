@@ -18,6 +18,11 @@ public interface XmlTemplateService {
      * @param sb
      */
     void loadMysqlConfiguration(JsonGlobalDTO globalConfig,StringBuilder sb) ;
+    void loadSQLServerConfiguration(JsonGlobalDTO globalConfig, StringBuilder sb);
+
+    void loadOracleConfiguration(JsonGlobalDTO globalConfig, StringBuilder sb);
+
+    void loadPostgreSQLConfiguration(JsonGlobalDTO globalConfig, StringBuilder sb);
 
     void loadListenerStart(JsonNodeDTO jsonNodeDTO, StringBuilder sb,int depth) ;
     void loadChoiceStart(JsonNodeDTO jsonNodeDTO,StringBuilder sb,int depth) ;
@@ -48,4 +53,6 @@ public interface XmlTemplateService {
     void loadSubFlowEnd(JsonNodeDTO node, StringBuilder sb, int i);
 
     void loadFlowEnd(StringBuilder sb) ;
+
+
 }

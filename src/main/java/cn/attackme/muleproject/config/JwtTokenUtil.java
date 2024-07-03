@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +15,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JwtTokenUtil {
 
     @Value("${config.jwt.secret}")
@@ -26,6 +30,8 @@ public class JwtTokenUtil {
 
     @Value("${config.jwt.expire}")
     private Long expiration;
+
+
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -75,5 +81,25 @@ public class JwtTokenUtil {
             throw new AccessDeniedException("用户未认证");
         }
         return authentication.getName();
+    }
+
+
+    /**
+     * 通过request解析出token
+     * @param request
+     * @return
+     */
+    public String getTokenFromRequest(HttpServletRequest request){
+        // 通过request拿到token
+        String authorization = request.getHeader("Authorization");
+        String jwtToken = null ;
+        if(authorization != null && authorization.startsWith("Bearer ")){
+            // 去除"Bearer "前缀，获取纯令牌部分
+            return authorization.substring(7);
+        }else{
+            log.debug("没有令牌，无法解析出token");
+            return null;
+        }
+
     }
 }

@@ -19,14 +19,42 @@ public class XmlTemplateServiceImpl implements XmlTemplateService {
         sb.append("\t<http:listener-config name=\""+globalConfig.getName()+"\" doc:name=\"HTTP Listener config\" doc:id=\""+globalConfig.getId()+"\" basePath=\""+globalConfig.getBasePath()+"\">\n" +
                 "\t\t<http:listener-connection host=\""+globalConfig.getHost()+"\" port=\""+globalConfig.getPort()+"\" />\n" +
                 "\t</http:listener-config>\n") ;
+//        sb.append("\t<http:listener-config name=\""+globalConfig.getName()+"\" host=\""+globalConfig.getHost()+"\" port=\""+globalConfig.getPort()+"\" basePath=\""+globalConfig.getBasePath()+"\" doc:name=\"HTTP Listener Configuration\"/>") ;
     }
     @Override
     public void loadMysqlConfiguration(JsonGlobalDTO globalConfig,StringBuilder sb) {
-
         sb.append("\t<db:config name=\""+globalConfig.getName()+"\" doc:name=\"Database Config\" doc:id=\""+globalConfig.getId()+"\" >\n" +
-                "\t\t<db:my-sql-connection host=\""+globalConfig.getHost()+"\" port=\""+globalConfig.getPort()+"\" user=\""+globalConfig.getUsername()+"\" password=\""+globalConfig.getPassword()+"\" database=\""+globalConfig.getDatabase()+"\" />\n" +
+                "\t\t<db:my-sql-connection host=\""+globalConfig.getHost()+"\" port=\""+globalConfig.getPort()+"\" user=\""+globalConfig.getUsername()+"" +
+                "\" password=\""+globalConfig.getPassword()+
+                "\" database=\""+globalConfig.getDatabase()+"\" driver=\""+globalConfig.getDriver()+"\"   />\n" +
                 "\t</db:config>\n") ;
 
+    }
+
+    @Override
+    public void loadSQLServerConfiguration(JsonGlobalDTO globalConfig, StringBuilder sb) {
+        sb.append("\t<db:config name=\""+globalConfig.getName()+"\" doc:name=\"Database Config\" doc:id=\""+globalConfig.getId()+"\" >\n" +
+                "\t\t<db:mssql-connection host=\""+globalConfig.getHost()+"\" instanceName=\""+globalConfig.getInstanceName()+"\" port=\""+ globalConfig.getPort()+"" +
+                "\" user=\""+globalConfig.getUsername()+"\" password=\""+globalConfig.getPassword()+"\" databaseName=\""+globalConfig.getDatabase()+"\" driver=\""+globalConfig.getDriver()+"\" />\n" +
+                "\t</db:config>\n") ;
+    }
+
+    @Override
+    public void loadOracleConfiguration(JsonGlobalDTO globalConfig, StringBuilder sb) {
+        sb.append("\t<db:config name=\""+globalConfig.getName()+"\" doc:name=\"Database Config\" doc:id=\""+globalConfig.getId()+"\" >\n" +
+                "\t\t<db:oracle-connection host=\""+globalConfig.getHost()+"\" port=\""+globalConfig.getPort()+"" +
+                "\" user=\""+globalConfig.getUsername()+"\" password=\""+globalConfig.getPassword()+"、\" instance=\""+globalConfig.getInstanceName()+
+                "\" serviceName=\""+globalConfig.getServiceName()+"\" driver=\""+globalConfig.getDriver()+"\" />\n" +
+                "\t</db:config>\n") ;
+
+    }
+
+    @Override
+    public void loadPostgreSQLConfiguration(JsonGlobalDTO globalConfig, StringBuilder sb) {
+        sb.append("\t<db:config name=\""+globalConfig.getName()+"\" doc:name=\"Database Config\" doc:id=\""+globalConfig.getId()+"\" >\n" +
+                "\t\t<db:postgre-sql-connection host=\""+globalConfig.getHost()+"\" port=\""+globalConfig.getPort()+"\" user=\""+globalConfig.getUsername()+"\" password=\""+globalConfig.getPassword()+"" +
+                "\" database=\""+globalConfig.getDatabase()+"\" driver=\""+globalConfig.getDriver()+"\"   />\n" +
+                "\t</db:config>\n") ;
     }
 
     //========================================头部处理===========================================================
@@ -95,7 +123,7 @@ public class XmlTemplateServiceImpl implements XmlTemplateService {
     public void loadChoiceDefaultStart(JsonNodeDTO jsonNodeDTO, StringBuilder sb, int depth) {
 
         if(jsonNodeDTO.getChildNodes().isEmpty() || jsonNodeDTO.getChildNodes() == null){
-            log.info("看一下： "+jsonNodeDTO.getChildNodes());
+//            log.info("看一下： "+jsonNodeDTO.getChildNodes());
             return ;
         }
         creatTab(sb,depth);
@@ -112,9 +140,9 @@ public class XmlTemplateServiceImpl implements XmlTemplateService {
 
     @Override
     public  void loadFlowStart(JsonNodeDTO node,StringBuilder sb){
+
         Map<String,Object> data = node.getData() ;
         sb.append("\t<flow name=\""+data.get("displayName")+"\" doc:id=\""+node.getId()+"\">\n") ;
-
     }
 
 
@@ -148,7 +176,7 @@ public class XmlTemplateServiceImpl implements XmlTemplateService {
     @Override
     public void loadChoiceDefaultEnd(JsonNodeDTO jsonNodeDTO, StringBuilder sb, int depth) {
         if(jsonNodeDTO.getChildNodes().isEmpty() || jsonNodeDTO.getChildNodes() == null){
-            log.info("看一下： "+jsonNodeDTO.getChildNodes());
+//            log.info("看一下： "+jsonNodeDTO.getChildNodes());
             return ;
         }
         creatTab(sb,depth);
@@ -172,4 +200,6 @@ public class XmlTemplateServiceImpl implements XmlTemplateService {
     public  void loadFlowEnd(StringBuilder sb){
         sb.append("\t</flow>\n") ;
     }
+
+
 }
