@@ -20,7 +20,7 @@ public class CanvasEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "canvas_name")
+    @Column(name = "canvas_name",columnDefinition = "VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci")
     private String canvasName;
 
     @Column(name = "create_time")

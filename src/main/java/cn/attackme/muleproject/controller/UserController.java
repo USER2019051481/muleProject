@@ -3,8 +3,6 @@ package cn.attackme.muleproject.controller;
 import cn.attackme.muleproject.config.JwtTokenUtil;
 import cn.attackme.muleproject.dto.UserDTO;
 import cn.attackme.muleproject.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -47,13 +43,12 @@ public class UserController {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(userData);
-            String username = jsonNode.get("username").toString();
-            String password = jsonNode.get("password").toString();
+            String username = jsonNode.get("username").textValue();
+            String password = jsonNode.get("password").textValue();
 
             if (userService.findByUsername(username)!= null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("用户名已存在");
             }
-            // 尝试注册用户
             UserDTO userDTO = userService.convertToDTO(username, password);
             userService.save(userDTO);
 
@@ -71,8 +66,8 @@ public class UserController {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(userData);
-            String username = jsonNode.get("username").toString();
-            String password = jsonNode.get("password").toString();
+            String username = jsonNode.get("username").textValue();
+            String password = jsonNode.get("password").textValue();
 
             final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 

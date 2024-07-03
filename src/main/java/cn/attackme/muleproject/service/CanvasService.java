@@ -1,5 +1,6 @@
 package cn.attackme.muleproject.service;
 
+import cn.attackme.muleproject.config.JwtTokenUtil;
 import cn.attackme.muleproject.dto.CanvasDTO;
 import cn.attackme.muleproject.entity.CanvasEntity;
 import cn.attackme.muleproject.entity.User;
@@ -10,11 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CanvasService {
@@ -22,9 +19,18 @@ public class CanvasService {
     private CanvasRepository canvasRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
-    public void saveCanvas(CanvasDTO canvasDTO) {
-        canvasRepository.save(convertToCanvas(canvasDTO));
+    public Map<String, Object> saveCanvas(CanvasDTO canvasDTO, String username) throws JsonProcessingException {
+        Map<String, Object> canvasMap = new HashMap<>();
+        Long userId = userRepository.findByUsername(username).getId();
+        CanvasEntity savedvanvas = canvasRepository.save(convertToCanvas(canvasDTO));
+        canvasMap.put("id", savedvanvas.getId());
+        canvasMap.put("name", savedvanvas.getCanvasName());
+        Object json = new ObjectMapper().readValue(savedvanvas.getCanvasJson(), Object.class);
+        canvasMap.put("canvas", json);
+        return canvasMap;
     }
 
     public List<Map<String, Object>> getCanvases(String username) throws JsonProcessingException {
@@ -43,8 +49,37 @@ public class CanvasService {
         return canvasList;
     }
 
+    public Map<String, Object> getCanvasesByID(Long id) throws JsonProcessingException {
+        Optional<CanvasEntity> canvasOptional = canvasRepository.findById(id);
+        if (!canvasOptional.isPresent()) {
+            throw new RuntimeException("该画布不存在");
+        }
+        CanvasEntity canvas = canvasOptional.get();
+        Map<String, Object> canvasMap = new HashMap<>();
+        canvasMap.put("id", canvas.getId());
+        canvasMap.put("name", canvas.getCanvasName());
+        Object json = new ObjectMapper().readValue(canvas.getCanvasJson(), Object.class);
+        canvasMap.put("canvas", json);
+        return canvasMap;
+    }
+
     public void updateCanvasName(Long id, String newName) {
-        canvasRepository.updateCanvasNameById(id, newName);
+        String username = jwtTokenUtil.getAuthenticatedUsername();
+//        Long userId = userRepository.findByUsername(username).getId();
+//        String oldName = canvasRepository.findCanvasNameById(id);
+        if (!canvasRepository.existsById(id)) {
+            throw new IllegalArgumentException("画布不存在");
+        }
+        else {
+            canvasRepository.updateNameById(id, newName);
+        }
+    }
+
+    public void updateCanvas(Long id, String newCanvas) {
+        if (!canvasRepository.existsById(id)) {
+            throw new IllegalArgumentException("画布不存在");
+        }
+        canvasRepository.updateCanvasJsonById(id, newCanvas);
     }
 
     public void deleteCanvas(Long id){
