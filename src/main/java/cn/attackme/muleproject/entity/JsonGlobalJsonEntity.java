@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "jsonglobal")
@@ -26,4 +27,7 @@ public class JsonGlobalJsonEntity {
     private String globalJson ;
     @Column(name = "global_name")
     private String globalName ;
+
+    @Column(name = "time")
+    private LocalDateTime time ;
 }

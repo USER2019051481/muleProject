@@ -1,5 +1,6 @@
 package cn.attackme.muleproject.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.Map;
@@ -11,7 +12,7 @@ public class JsonGlobalDTO {
     private String type ;
     private String host;
     private String port;
-    // HTTP
+    //HTTP、Request
     private String protocol;
     private String basePath;
     // database
@@ -24,6 +25,8 @@ public class JsonGlobalDTO {
     private String instanceName ;
     //Oracle
     private String serviceName ;
+    // Request
+    private String connectionIdleTimeout ;
 
 
 

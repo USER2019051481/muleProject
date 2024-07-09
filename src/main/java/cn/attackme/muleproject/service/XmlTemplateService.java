@@ -1,10 +1,16 @@
 package cn.attackme.muleproject.service;
 
 import cn.attackme.muleproject.dto.JsonGlobalDTO;
+import cn.attackme.muleproject.dto.JsonGlobalXmlDTO;
 import cn.attackme.muleproject.dto.JsonNodeDTO;
 import springfox.documentation.spring.web.json.Json;
 
 public interface XmlTemplateService {
+//    -----------------------------处理版本和头文件
+    void loadVersion(StringBuilder sb);
+    void loadHeadFile(StringBuilder sb) ;
+
+//    ------------------------------ 全局配置
     /**
      * 处理HttpListener
      * @param globalConfig
@@ -24,6 +30,10 @@ public interface XmlTemplateService {
 
     void loadPostgreSQLConfiguration(JsonGlobalDTO globalConfig, StringBuilder sb);
 
+    void loadRequestConfiguration(JsonGlobalDTO globalDTO,StringBuilder sb) ;
+
+    // -----------------------------------------flow组件开始
+
     void loadListenerStart(JsonNodeDTO jsonNodeDTO, StringBuilder sb,int depth) ;
     void loadChoiceStart(JsonNodeDTO jsonNodeDTO,StringBuilder sb,int depth) ;
     void loadFlowReferenceStart(JsonNodeDTO jsonNodeDTO,StringBuilder sb,int depth) ;
@@ -34,7 +44,10 @@ public interface XmlTemplateService {
     void loadChoiceDefaultStart(JsonNodeDTO jsonNodeDTO,StringBuilder sb,int depth) ;
 
     void loadFlowStart(JsonNodeDTO node,StringBuilder sb) ;
-//==========================================================================================
+
+    void loadSetPayloadStart(JsonNodeDTO jsonNodeDTO,StringBuilder sb , int depth) ;
+    void loadRequestStart(JsonNodeDTO jsonNodeDTO , StringBuilder sb , int depth) ;
+//====================================处理结尾======================================================
 
     void loadForEachStart(JsonNodeDTO node, StringBuilder result, int depth);
 
@@ -53,6 +66,8 @@ public interface XmlTemplateService {
     void loadSubFlowEnd(JsonNodeDTO node, StringBuilder sb, int i);
 
     void loadFlowEnd(StringBuilder sb) ;
+// -----------------------------------------以mule结尾
 
+    void loadMuleEnd(StringBuilder sb) ;
 
 }

@@ -28,6 +28,7 @@ import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public class JsonToXmlController {
     private JsonGlobalXmlService jsonGlobalXmlService ;
 
     /**
-     * 一个业务流的json转xml文件
+     * 一个业务流的json转xml文件（包括全局配置和普通组件）
      * @param json
      * @return
      * @throws IOException
@@ -92,6 +93,64 @@ public class JsonToXmlController {
                 .body(fileContent);
     }
 
+//    ------------------将全局配置和普通组件提取出来转xml----------------------------
+
+
+    /**
+     * 整个项目的全局配置json转xml文件(只含有全局配置)
+     * @param json
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/globalXml")
+    public ResponseEntity<?> globalJsonToXml(@RequestBody String json) throws IOException {
+        // 将json文件转成xml文件
+        String xmlString = jsonToXmlService.loadGlobalJsonFromFile(json);
+
+        // 设置响应头，指定文件名为原始文件名加上 .xml 后缀
+        String outputFileName = "globalXml-"+UUID.randomUUID().toString() ;// 构造输出文件名
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", outputFileName);
+
+        // 将字符串转为byte数组，Original byte[]
+        byte[] fileContent = xmlString.getBytes();
+
+        // 返回字节数组作为响应体，并设置响应头
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_XML)
+                .body(fileContent);
+    }
+
+    /**
+     * 将业务流的json转xml文件
+     * @param json
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/flowXml")
+    public ResponseEntity<?> flowJsonToXml(@RequestBody String json) throws IOException{
+        // 将json文件转成xml文件
+        String xmlString = jsonToXmlService.loadFlowJsonFromFile(json);
+
+        // 设置响应头，指定文件名为原始文件名加上 .xml 后缀
+        String outputFileName = "flowXml-"+UUID.randomUUID().toString() ;// 构造输出文件名
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", outputFileName);
+
+        // 将字符串转为byte数组，Original byte[]
+        byte[] fileContent = xmlString.getBytes();
+
+        // 返回字节数组作为响应体，并设置响应头
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_XML)
+                .body(fileContent);
+    }
+
+
+//    --------------- 对于单个json转xml的增删改查---------------------------------
+
     /**
      * 保存全局配置（POST）
      * @param request 头部的token
@@ -104,12 +163,13 @@ public class JsonToXmlController {
         // 设置一个UUID给全局配置
         String xmlId = UUID.randomUUID().toString();
 
-        //获取Token和username
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if(jwtToken == null){
-            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
-        }
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+//        //获取Token和username
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if(jwtToken == null){
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
+//        }
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
 
         // 将json中的name解析出来，方便后面通过name查询使用
         JsonGlobalDTO jsonGlobalDTO = jsonToXmlService.loadJsonToJsonGlobalDTO(json);
@@ -154,13 +214,14 @@ public class JsonToXmlController {
      */
     @GetMapping("/getGlobalConfigXml")
     public ResponseEntity<?> GetGlobalConfigjsonToXml(HttpServletRequest request)  {
-        // 通过request拿到token
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if(jwtToken == null){
-            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
-        }
-        // 通过token获取到用户名
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+//        // 通过request拿到token
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if(jwtToken == null){
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
+//        }
+//        // 通过token获取到用户名
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
 
         // 根据用户名去数据库查询xml
         List<JsonGlobalXmlEntity> allXml = jsonGlobalXmlService.findAllByUserName(userName);
@@ -172,13 +233,14 @@ public class JsonToXmlController {
 
     @GetMapping("/getGlobalConfigXmlByName")
     public ResponseEntity<?> GetGlobalConfigXmlByName(HttpServletRequest request , @RequestParam String globalName){
-        // 通过request拿到token
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if(jwtToken == null){
-            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
-        }
-        // 通过token获取到用户名
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+//        // 通过request拿到token
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if(jwtToken == null){
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
+//        }
+//        // 通过token获取到用户名
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
 
         // 通过用户名和全局配置名来查找全局配置
         JsonGlobalXmlEntity jsonGlobalXml = jsonGlobalXmlService.findByUserNameAndGlobalName(userName, globalName);
@@ -191,14 +253,15 @@ public class JsonToXmlController {
 
     @PutMapping("/updateGlobalConfigXml")
     public ResponseEntity<?> UpdateGlobalConfigXml(HttpServletRequest request ,@RequestBody String json) throws JsonProcessingException {
-        // 通过全局配置ID和用户名找到指定数据
-        // 1、通过request拿到token
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if(jwtToken == null){
-            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
-        }
-        // 2、通过token获取到用户名
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+//        // 通过全局配置ID和用户名找到指定数据
+//        // 1、通过request拿到token
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if(jwtToken == null){
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
+//        }
+//        // 2、通过token获取到用户名
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
         // 3、将json解析成对象
         JsonGlobalDTO jsonGlobalDTO = jsonToXmlService.loadJsonToJsonGlobalDTO(json);
         String xml = jsonToXmlService.loadGlobalConfigJsonFromFile(json);
@@ -219,14 +282,15 @@ public class JsonToXmlController {
      */
     @DeleteMapping("/deleteGlobalConfigXml")
     public ResponseEntity<?> deleteGlobalConfigXmlByName(HttpServletRequest request, @RequestParam String id) {
-        // 通过 request 拿到 token
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if (jwtToken == null) {
-            return ResponseEntity.status(404).body("没有令牌，无法解析出 token");
-        }
-
-        // 通过 token 获取到用户名
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+//        // 通过 request 拿到 token
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if (jwtToken == null) {
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出 token");
+//        }
+//
+//        // 通过 token 获取到用户名
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
         log.info("id: {} username: {}", id, userName);
 
         int deleteCount = jsonGlobalXmlService.deleteByIdAndUserName(id, userName);

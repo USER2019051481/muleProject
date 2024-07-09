@@ -110,7 +110,102 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
     }
 
     /**
-     * 全局配置的json转xml
+     *  整个项目的配置的json转xml
+     * @param json
+     * @return
+     */
+    @Override
+    public String loadGlobalJsonFromFile(String json) throws JsonProcessingException {
+        // 创建 ObjectMapper
+        // 如果 JSON 数据中的字段值为空字符串 ("")，它们将被解析为 Java 对象的 null。
+        ObjectMapper mapper = JsonMapper.builder()
+                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+                .build();
+        // 从输入流读取JSON数据并将其解析为Graph对象
+        JsonGraphDTO graph = mapper.readValue(json, JsonGraphDTO.class);
+        List<JsonGlobalDTO> globalConfigs = graph.getGlobalConfig();
+        StringBuilder sb = new StringBuilder() ;
+
+
+        xmlTemplateService.loadVersion(sb); // 写版本信息
+        xmlTemplateService.loadHeadFile(sb); // 写头文件
+
+        // 写全局的配置文件
+        if(globalConfigs.isEmpty()||globalConfigs==null){
+            //没有全局配置
+            log.info("此json文件没有全局配置！");
+        }else{
+            loadGlobalProperties(globalConfigs,sb);
+        }
+
+        xmlTemplateService.loadMuleEnd(sb); // 结尾mule标记
+        return sb.toString() ;
+    }
+
+    @Override
+    public String loadFlowJsonFromFile(String json) throws JsonProcessingException {
+        // 创建 ObjectMapper
+        // 如果 JSON 数据中的字段值为空字符串 ("")，它们将被解析为 Java 对象的 null。
+        ObjectMapper mapper = JsonMapper.builder()
+                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+                .build();
+
+        // 从输入流读取JSON数据并将其解析为Graph对象
+        JsonGraphDTO graph = mapper.readValue(json, JsonGraphDTO.class);
+        List<JsonNodeDTO> nodes = graph.getNodes();
+//        List<JsonEdgeDTO> edges = graph.getEdges();
+        List<JsonGlobalDTO> globalConfigs = graph.getGlobalConfig();
+        StringBuilder sb = new StringBuilder() ;
+        Set<String> writtenNodes = new HashSet<>(); // 用于存储已写入的节点的ID
+
+        // 先写mule
+        xmlTemplateService.loadVersion(sb);
+        xmlTemplateService.loadHeadFile(sb);
+
+        // 逐个解析flow
+        for(JsonNodeDTO node: nodes){
+            // 找到flow节点
+            boolean isFlow = findFlow(node);
+
+            if(!isFlow){
+//                log.info("该节点不是flow");
+                continue ;
+            }
+            // 该节点是flow节点
+            xmlTemplateService.loadFlowStart(node,sb);
+            // 处理flow里面的节点
+            for (String childNodeId : node.getChildNodes()) {
+//                log.info("flow里面的节点"+childNodeId);
+                JsonNodeDTO childNode = findNodeById(childNodeId, nodes);
+//                log.info("找到的子节点为"+childNode.getType());
+                writeNodeXml(writtenNodes, childNodeId, childNode, sb,nodes,2);
+            }
+            xmlTemplateService.loadFlowEnd(sb);
+        }
+
+
+
+//
+        // 判断有没有Subflow
+        for (JsonNodeDTO node : nodes) {
+            String nodeType = node.getType();
+            if ("SubFlow".equals(nodeType)) {
+                xmlTemplateService.loadSubFlowStart(node,sb,1);
+                // 找到未写入的节点，将其写入 XML
+                writeNodeXml(writtenNodes, node.getId(), node, sb, nodes,1);
+                xmlTemplateService.loadSubFlowEnd(node,sb,1);
+            }
+        }
+
+
+        xmlTemplateService.loadMuleEnd(sb);
+//        System.out.print("xml为：\n"+sb.toString());
+        return sb.toString() ;
+
+    }
+
+    /**
+     * 单个全局配置的json转xml
      * @param json
      * @return
      * @throws JsonProcessingException
@@ -176,8 +271,12 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
                         // TODO 还未有对应的xml配置
                         xmlTemplateService.loadPostgreSQLConfiguration(globalConfig,sb) ;
                     }
+
                     // TODO 还有其他类型数据库配置未处理
 
+                }
+                if("Request".equals(globalConfig.getType())){
+                    xmlTemplateService.loadRequestConfiguration(globalConfig,sb);
                 }
                 // TODO 还有其他类型的type未处理
             }
@@ -190,7 +289,7 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
 
     private void writeNodeXml(Set<String> writtenNodes, String id, JsonNodeDTO node, StringBuilder sb,List<JsonNodeDTO> nodes,int depth) {
         if(!writtenNodes.contains(id)){
-            log.info("id"+id);
+//            log.info("id"+id);
             String nodeSourceString = loadNode(node,nodes,new StringBuilder(),depth,writtenNodes);
             sb.append(nodeSourceString) ;
             writtenNodes.add(id) ;
@@ -238,6 +337,10 @@ public class JsonToXmlServiceImpl implements JsonToXmlService {
                 xmlTemplateService.loadForEachStart(node,result, depth);
             }else if("Logger".equals(type)){
                 xmlTemplateService.loadLoggerStart(node,result, depth);
+            }else if("SetPayload".equals(type)){
+                xmlTemplateService.loadSetPayloadStart(node,result,depth);
+            }else if("Request".equals(type)){
+                xmlTemplateService.loadRequestStart(node,result,depth);
             }
 //            for (Map.Entry<String, Object> entry : data.entrySet()) {
 //                String key = entry.getKey();

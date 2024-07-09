@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface JsonGlobalJsonRepository  extends JpaRepository<JsonGlobalJsonEntity, String> {
-    List<JsonGlobalJsonEntity> findAllByUserName(String userName);
+    List<JsonGlobalJsonEntity> findAllByUserNameOrderByTime(String userName);
 
     JsonGlobalJsonEntity findByUserNameAndGlobalName(String userName ,String globalName) ;
 

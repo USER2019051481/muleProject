@@ -9,10 +9,16 @@ import java.io.File;
 import java.io.IOException;
 
 public interface JsonToXmlService {
-    // 解析json文件
+    // 解析json字符串,json包括全局配置和flow组件
     String loadJsonFromFile(String json) throws IOException;
+//     解析json字符串,json包括整个项目的全局配置
+    String loadGlobalJsonFromFile(String json) throws JsonProcessingException;
+//    解析json字符串,json包括一个业务流的所有flow组件
+    String loadFlowJsonFromFile(String json) throws JsonProcessingException;
 
     String loadGlobalConfigJsonFromFile(String json ) throws JsonProcessingException;
     JsonGlobalDTO loadJsonToJsonGlobalDTO(String json) throws JsonProcessingException;
+
+
 
 }

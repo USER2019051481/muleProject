@@ -17,8 +17,8 @@ public class JsonGlobalJsonServiceImpl implements JsonGlobalJsonService {
     @Resource
     private JsonGlobalJsonRepository jsonGlobalJsonRepository ;
     @Override
-    public List<JsonGlobalJsonEntity> findAllByUserName(String userName) {
-        return jsonGlobalJsonRepository.findAllByUserName(userName);
+    public List<JsonGlobalJsonEntity> findAllByUserNameOrderByTime(String userName) {
+        return jsonGlobalJsonRepository.findAllByUserNameOrderByTime(userName);
     }
 
     @Override

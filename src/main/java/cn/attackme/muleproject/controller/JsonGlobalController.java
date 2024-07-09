@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -49,21 +50,21 @@ public class JsonGlobalController {
     public ResponseEntity<?> SaveGlobalConfigjsonToXml(HttpServletRequest request, @RequestBody String json) throws IOException {{
         // 设置一个UUID给全局配置
         String jsonId = UUID.randomUUID().toString();
-
-        //获取Token和username
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if(jwtToken == null){
-            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
-        }
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
-
+//
+//        //获取Token和username
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if(jwtToken == null){
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
+//        }
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
         // 将json中的name解析出来，方便后面通过name查询使用
         JsonGlobalDTO jsonGlobalDTO = jsonToXmlService.loadJsonToJsonGlobalDTO(json);
         String xmlName = jsonGlobalDTO.getName();
         String updatedJson = addIdToJson(json, jsonId);
 
         // 3、将全局配置ID，用户名，全局配置，全局配置名存入数据库
-        JsonGlobalJsonEntity jsonGlobalJsonEntity = new JsonGlobalJsonEntity(jsonId,userName,updatedJson,xmlName);
+        JsonGlobalJsonEntity jsonGlobalJsonEntity = new JsonGlobalJsonEntity(jsonId,userName,updatedJson,xmlName, LocalDateTime.now());
         try {
             jsonGlobalJsonService.save(jsonGlobalJsonEntity);
         } catch (Exception e) {
@@ -101,17 +102,17 @@ public class JsonGlobalController {
      */
     @GetMapping("/getGlobalConfigJson")
     public ResponseEntity<?> GetGlobalConfigjsonToJson(HttpServletRequest request)  {
-        // 通过request拿到token
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if(jwtToken == null){
-
-            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
-        }
-        // 通过token获取到用户名
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
-
+//         通过request拿到token
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if(jwtToken == null){
+//
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
+//        }
+//        // 通过token获取到用户名
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
         // 根据用户名去数据库查询xml
-        List<JsonGlobalJsonEntity> allJson = jsonGlobalJsonService.findAllByUserName(userName);
+        List<JsonGlobalJsonEntity> allJson = jsonGlobalJsonService.findAllByUserNameOrderByTime(userName);
         // 将查询到的xml通过数组的形式返回给前端
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -125,14 +126,14 @@ public class JsonGlobalController {
      */
     @GetMapping("/getGlobalConfigJsonByName")
     public ResponseEntity<?> GetGlobalConfigJsonByName(HttpServletRequest request , @RequestParam String globalName){
-        // 通过request拿到token
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if(jwtToken == null){
-            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
-        }
-        // 通过token获取到用户名
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
-
+//        // 通过request拿到token
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if(jwtToken == null){
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
+//        }
+//        // 通过token获取到用户名
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
         // 通过用户名和全局配置名来查找全局配置
         JsonGlobalJsonEntity jsonGlobalXml = jsonGlobalJsonService.findByUserNameAndGlobalName(userName, globalName);
         if(jsonGlobalXml == null){
@@ -154,14 +155,15 @@ public class JsonGlobalController {
      */
     @PutMapping("/updateGlobalConfigJson")
     public ResponseEntity<?> UpdateGlobalConfigJson(HttpServletRequest request ,@RequestBody String json) throws JsonProcessingException {
-        // 通过全局配置ID和用户名找到指定数据
-        // 1、通过request拿到token
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if(jwtToken == null){
-            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
-        }
-        // 2、通过token获取到用户名
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+//        // 通过全局配置ID和用户名找到指定数据
+//        // 1、通过request拿到token
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if(jwtToken == null){
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出token") ;
+//        }
+//        // 2、通过token获取到用户名
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
         // 3、将json解析成对象
         JsonGlobalDTO jsonGlobalDTO = jsonToXmlService.loadJsonToJsonGlobalDTO(json);
         String jsonId = jsonGlobalDTO.getId();
@@ -186,14 +188,16 @@ public class JsonGlobalController {
      */
     @DeleteMapping("/deleteGlobalConfigJson")
     public ResponseEntity<?> deleteGlobalConfigJsonByName(HttpServletRequest request, @RequestParam String id) {
-        // 通过 request 拿到 token
-        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
-        if (jwtToken == null) {
-            return ResponseEntity.status(404).body("没有令牌，无法解析出 token");
-        }
-
-        // 通过 token 获取到用户名
-        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+//        // 通过 request 拿到 token
+//        String jwtToken = jwtTokenUtil.getTokenFromRequest(request);
+//        if (jwtToken == null) {
+//            return ResponseEntity.status(404).body("没有令牌，无法解析出 token");
+//        }
+//
+//        // 通过 token 获取到用户名
+//        String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        // 通过token得到username
+        String userName = jwtTokenUtil.getAuthenticatedUsername();
         log.info("id: {} username: {}", id, userName);
 
         int deleteCount = jsonGlobalJsonService.deleteByIdAndUserName(id, userName);

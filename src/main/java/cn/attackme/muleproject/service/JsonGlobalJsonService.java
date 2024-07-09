@@ -6,7 +6,7 @@ import cn.attackme.muleproject.entity.JsonGlobalXmlEntity;
 import java.util.List;
 
 public interface JsonGlobalJsonService {
-    List<JsonGlobalJsonEntity> findAllByUserName(String userName);
+    List<JsonGlobalJsonEntity> findAllByUserNameOrderByTime(String userName);
     JsonGlobalJsonEntity findByUserNameAndGlobalName(String userName ,String globalName) ;
     int deleteByIdAndUserName(String id,String userName);
     void save(JsonGlobalJsonEntity jsonGlobalJsonEntity) ;
