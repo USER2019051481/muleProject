@@ -5,34 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="565380a7-8bbf-4feb-8b97-a7e6052bcc83" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/JsonGlobalController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/dto/JsonGlobalJsonDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/dto/JsonGlobalXmlDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/entity/JsonGlobalJsonEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/entity/JsonGlobalXmlEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/repository/JsonGlobalJsonRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/repository/JsonGlobalXmlRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/JsonGlobalJsonService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/JsonGlobalXmlService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/JsonGlobalJsonServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/JsonGlobalXmlServicelmpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/config/JwtTokenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/config/JwtTokenUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/JsonToXmlController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/JsonToXmlController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/dto/JsonGlobalDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/dto/JsonGlobalDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/JsonToXmlService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/JsonToXmlService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/XmlTemplateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/XmlTemplateService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/JsonToXmlServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/JsonToXmlServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/XmlTemplateServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/XmlTemplateServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/JwtRequestFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/JwtRequestFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/JwtTokenUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/JwtTokenUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/CanvasController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/controller/CanvasController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/CanvasService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/CanvasServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/ComponentHandleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/ComponentHandleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/XmlToJsonService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/XmlToJsonService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/XmlToJsonServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/XmlToJsonServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/config/SecurityConfig.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/controller/CanvasController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/controller/CanvasController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/controller/UserController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/CanvasService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/CanvasService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/muleProject-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/muleProject-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/ComponentHandleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/ComponentHandleService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/serviceImpl/XmlToJsonServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/attackme/muleproject/service/serviceImpl/XmlToJsonServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,8 +26,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="FxmlFile" />
-        <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -210,6 +194,10 @@
       <workItem from="1719502091586" duration="2882000" />
       <workItem from="1719549352065" duration="3454000" />
       <workItem from="1719972156483" duration="1131000" />
+      <workItem from="1720407839909" duration="29118000" />
+      <workItem from="1720528663711" duration="3181000" />
+      <workItem from="1720539528245" duration="187000" />
+      <workItem from="1720687362518" duration="63000" />
     </task>
     <servers />
   </component>
@@ -220,6 +208,22 @@
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cn/attackme/muleproject/service/serviceImpl/XmlToJsonServiceImpl.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.sun.org.apache.xerces.internal.dom.DeferredElementImpl" memberName="flags" />
+        <PinnedItemInfo parentTag="com.sun.org.apache.xerces.internal.dom.DeferredElementImpl" memberName="ownerDocument" />
+        <PinnedItemInfo parentTag="org.jdom2.Element" memberName="content" />
+      </pinned-members>
+    </pin-to-top-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="((JdkDynamicAopProxy)this.h).hashCodeDefined" custom="org.springframework.aop.framework.JdkDynamicAopProxy,java.lang.reflect.Proxy" />

@@ -52,6 +52,9 @@ public class XmlToJsonServiceImpl implements XmlToJsonService {
             case "listener-config":
                 globalConfigsArray.add(componentHandleService.HttpListenerGlobalConfig(element));
                 break;
+            case "request-config":
+                globalConfigsArray.add(componentHandleService.HttpRequestGlobalConfig(element));
+                break;
             case "flow":
             case "sub-flow":
                 flowElements.add(element);
@@ -59,6 +62,9 @@ public class XmlToJsonServiceImpl implements XmlToJsonService {
                 break;
             case "listener":
                 nodes.add(componentHandleService.ListenerConfig(element));
+                break;
+            case "request":
+                nodes.add(componentHandleService.RequestConfig(element));
                 break;
             case "when":
                 nodes.add(componentHandleService.ChoiceWhenConfig(element));
@@ -84,6 +90,8 @@ public class XmlToJsonServiceImpl implements XmlToJsonService {
             case "logger":
                 nodes.add(componentHandleService.LoggerConfig(element));
                 break;
+            case "set-payload":
+                nodes.add(componentHandleService.SetPayloadConfig(element));
             default:
                 break;
         }
@@ -98,7 +106,6 @@ public class XmlToJsonServiceImpl implements XmlToJsonService {
         Document document = saxBuilder.build(inputStream);
         Element rootElement = document.getRootElement();
 
-        // 递归处理每个节点
         preProcessXml(rootElement);
 
         // 输出修改后的XML文件到内存中的ByteArrayOutputStream
@@ -106,7 +113,6 @@ public class XmlToJsonServiceImpl implements XmlToJsonService {
         XMLOutputter xmlOutputter = new XMLOutputter();
         xmlOutputter.output(document, outputStream);
 
-        // 将ByteArrayOutputStream转换为InputStream
         byte[] xmlBytes = outputStream.toByteArray();
         InputStream modifiedInputStream = new ByteArrayInputStream(xmlBytes);
 
@@ -135,7 +141,6 @@ public class XmlToJsonServiceImpl implements XmlToJsonService {
                 element.setAttribute("id", UUID.randomUUID().toString(),docNamespace);
             }
         }
-        // 递归处理子节点
         List<Element> children = element.getChildren();
         for (Element child : children) {
             preProcessXml(child);

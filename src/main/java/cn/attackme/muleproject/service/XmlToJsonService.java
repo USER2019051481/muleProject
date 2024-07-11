@@ -13,5 +13,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface XmlToJsonService {
-    public String convertXmlToJson(MultipartFile file) throws Exception;
+    String convertXmlToJson(MultipartFile file) throws Exception;
 }

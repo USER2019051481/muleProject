@@ -2,7 +2,7 @@ package cn.attackme.muleproject.controller;
 
 import cn.attackme.muleproject.config.JwtTokenUtil;
 import cn.attackme.muleproject.dto.CanvasDTO;
-import cn.attackme.muleproject.service.CanvasService;
+import cn.attackme.muleproject.service.serviceImpl.CanvasServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/canvas")
 public class CanvasController {
     @Autowired
-    private CanvasService canvasService;
+    private CanvasServiceImpl canvasService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
